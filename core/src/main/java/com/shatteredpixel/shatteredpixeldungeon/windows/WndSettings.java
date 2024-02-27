@@ -251,6 +251,7 @@ public class WndSettings extends WndTabbed {
 		OptionSlider optVisGrid;
 		OptionSlider optFollowIntensity;
 		OptionSlider optScreenShake;
+		CheckBox chkMinimalAnimations;
 
 		@Override
 		protected void createChildren() {
@@ -337,6 +338,15 @@ public class WndSettings extends WndTabbed {
 			optScreenShake.setSelectedValue(SPDSettings.screenShake());
 			add(optScreenShake);
 
+			chkMinimalAnimations = new CheckBox(Messages.get(this, "animations")) {
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.minimalAnimations(checked());
+				}
+			};
+			chkMinimalAnimations.checked(SPDSettings.minimalAnimations());
+			add( chkMinimalAnimations );
 		}
 
 		@Override
@@ -378,7 +388,12 @@ public class WndSettings extends WndTabbed {
 				optScreenShake.setRect(0, optFollowIntensity.bottom() + GAP, width, SLIDER_HEIGHT);
 			}
 
-			height = optScreenShake.bottom();
+			if (chkMinimalAnimations != null) {
+				chkMinimalAnimations.setRect(0, optScreenShake.bottom() + GAP, width, BTN_HEIGHT);
+				bottom = chkMinimalAnimations.bottom();
+			}
+
+			height = chkMinimalAnimations.bottom();
 		}
 
 	}

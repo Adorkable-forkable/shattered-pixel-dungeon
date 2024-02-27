@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -253,6 +254,9 @@ public class TitleBackground extends Component {
 	@Override
 	public synchronized void update() {
 		super.update();
+
+		if (SPDSettings.minimalAnimations())
+			return;
 
 		float scale = height / 450f;
 		float shift = Game.elapsed * SCROLL_SPEED * scale;

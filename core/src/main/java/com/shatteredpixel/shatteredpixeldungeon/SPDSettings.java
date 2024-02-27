@@ -56,6 +56,7 @@ public class SPDSettings extends GameSettings {
     public static final String KEY_GRID         = "visual_grid";
     public static final String KEY_CAMERA_FOLLOW= "camera_follow";
     public static final String KEY_SCREEN_SHAKE = "screen_shake";
+    public static final String KEY_MINIMAL_ANIMATIONS = "minimal_animations";
 
     public static void fullscreen( boolean value ){
         put( KEY_FULLSCREEN, value );
@@ -116,6 +117,14 @@ public class SPDSettings extends GameSettings {
 
     public static int screenShake() {
         return getInt( KEY_SCREEN_SHAKE, 2, 0, 4 );
+    }
+
+    public static void minimalAnimations( boolean value ) {
+        put( KEY_MINIMAL_ANIMATIONS, value );
+    }
+
+    public static boolean minimalAnimations() {
+        return getBoolean( KEY_MINIMAL_ANIMATIONS, false );
     }
 
     // Interface
