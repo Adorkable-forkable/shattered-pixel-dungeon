@@ -53,21 +53,23 @@ public class ShatteredPixelDungeon extends Game {
 				"com.shatteredpixel.shatteredpixeldungeon.items.keys.SkeletonKey" );
 
 	}
-	
+
 	@Override
 	public void create() {
 		super.create();
 
 		updateSystemUI();
 		SPDAction.loadBindings();
-		
-		Music.INSTANCE.enable( SPDSettings.music() );
-		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
-		Sample.INSTANCE.enable( SPDSettings.soundFx() );
-		Sample.INSTANCE.volume( SPDSettings.SFXVol()*SPDSettings.SFXVol()/100f );
 
-		Sample.INSTANCE.load( Assets.Sounds.all );
-		
+		Music.INSTANCE.enable(SPDSettings.music());
+		Music.INSTANCE.volume(SPDSettings.musicVol() * SPDSettings.musicVol() / 100f);
+		Sample.INSTANCE.enable(SPDSettings.soundFx());
+		Sample.INSTANCE.volume(SPDSettings.SFXVol() * SPDSettings.SFXVol() / 100f);
+
+		Sample.INSTANCE.load(Assets.Sounds.all);
+
+		// Difficulty.INSTANCE.consumeAnkh( SPDSettings.consumeAnkh() );
+
 	}
 
 	@Override
@@ -75,44 +77,44 @@ public class ShatteredPixelDungeon extends Game {
 		if (!DeviceCompat.isiOS()) {
 			super.finish();
 		} else {
-			//can't exit on iOS (Apple guidelines), so just go to title screen
+			// can't exit on iOS (Apple guidelines), so just go to title screen
 			switchScene(TitleScene.class);
 		}
 	}
 
-	public static void switchNoFade(Class<? extends PixelScene> c){
+	public static void switchNoFade(Class<? extends PixelScene> c) {
 		switchNoFade(c, null);
 	}
 
 	public static void switchNoFade(Class<? extends PixelScene> c, SceneChangeCallback callback) {
 		PixelScene.noFade = true;
-		switchScene( c, callback );
+		switchScene(c, callback);
 	}
-	
+
 	public static void seamlessResetScene(SceneChangeCallback callback) {
-		if (scene() instanceof PixelScene){
+		if (scene() instanceof PixelScene) {
 			((PixelScene) scene()).saveWindows();
-			switchNoFade((Class<? extends PixelScene>) sceneClass, callback );
+			switchNoFade((Class<? extends PixelScene>) sceneClass, callback);
 		} else {
 			resetScene();
 		}
 	}
-	
-	public static void seamlessResetScene(){
+
+	public static void seamlessResetScene() {
 		seamlessResetScene(null);
 	}
-	
+
 	@Override
 	protected void switchScene() {
 		super.switchScene();
-		if (scene instanceof PixelScene){
+		if (scene instanceof PixelScene) {
 			((PixelScene) scene).restoreWindows();
 		}
 	}
-	
+
 	@Override
-	public void resize( int width, int height ) {
-		if (width == 0 || height == 0){
+	public void resize(int width, int height) {
+		if (width == 0 || height == 0) {
 			return;
 		}
 
@@ -122,19 +124,19 @@ public class ShatteredPixelDungeon extends Game {
 			((PixelScene) scene).saveWindows();
 		}
 
-		super.resize( width, height );
+		super.resize(width, height);
 
 		updateDisplaySize();
 
 	}
-	
+
 	@Override
-	public void destroy(){
+	public void destroy() {
 		super.destroy();
 		GameScene.endActorThread();
 	}
-	
-	public void updateDisplaySize(){
+
+	public void updateDisplaySize() {
 		platform.updateDisplaySize();
 	}
 
