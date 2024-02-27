@@ -33,63 +33,67 @@ import com.watabou.utils.PlatformSupport;
 
 public class ShatteredPixelDungeon extends Game {
 
-	//variable constants for specific older versions of shattered, used for data conversion
-	public static final int v1_2_3 = 628; //v1.2.3 is kept for now, for old rankings score logic
+	// variable constants for specific older versions of shattered, used for data
+	// conversion
+	public static final int v1_2_3 = 628; // v1.2.3 is kept for now, for old rankings score logic
 
-	//savegames from versions older than v1.4.3 are no longer supported, and data from them is ignored
+	// savegames from versions older than v1.4.3 are no longer supported, and data
+	// from them is ignored
 	public static final int v1_4_3 = 668;
 
 	public static final int v2_0_2 = 700;
-	public static final int v2_1_4 = 737; //iOS was 737, other platforms were 736
-	public static final int v2_2_1 = 755; //iOS was 755 (also called v2.2.2), other platforms were 754
+	public static final int v2_1_4 = 737; // iOS was 737, other platforms were 736
+	public static final int v2_2_1 = 755; // iOS was 755 (also called v2.2.2), other platforms were 754
 	public static final int v2_3_0 = 765;
-	
-	public ShatteredPixelDungeon( PlatformSupport platform ) {
-		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
 
-		//pre-v2.3.0
+	public ShatteredPixelDungeon(PlatformSupport platform) {
+		super(sceneClass == null ? WelcomeScene.class : sceneClass, platform);
+
+		// pre-v2.3.0
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb.ConjuredBomb.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb$MagicalBomb" );
+				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb$MagicalBomb");
 
-		//pre-v2.2.0
+		// pre-v2.2.0
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.BlacksmithRoom.QuestEntrance.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.BlacksmithRoom$QuestEntrance" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.BlacksmithRoom$QuestEntrance");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.BlacksmithRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.BlacksmithRoom" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.BlacksmithRoom");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.MassGraveRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MassGraveRoom" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MassGraveRoom");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.MassGraveRoom.Bones.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MassGraveRoom$Bones" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MassGraveRoom$Bones");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.RitualSiteRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.RitualSiteRoom" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.RitualSiteRoom");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.RitualSiteRoom.RitualMarker.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.RitualSiteRoom$RitualMarker" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.RitualSiteRoom$RitualMarker");
 		com.watabou.utils.Bundle.addAlias(
 				com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest.RotGardenRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.RotGardenRoom" );
+				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.RotGardenRoom");
 	}
-	
+
 	@Override
 	public void create() {
 		super.create();
 
 		updateSystemUI();
 		SPDAction.loadBindings();
-		
-		Music.INSTANCE.enable( SPDSettings.music() );
-		Music.INSTANCE.volume( SPDSettings.musicVol()*SPDSettings.musicVol()/100f );
-		Sample.INSTANCE.enable( SPDSettings.soundFx() );
-		Sample.INSTANCE.volume( SPDSettings.SFXVol()*SPDSettings.SFXVol()/100f );
 
-		Sample.INSTANCE.load( Assets.Sounds.all );
-		
+		Music.INSTANCE.enable(SPDSettings.music());
+		Music.INSTANCE.volume(SPDSettings.musicVol() * SPDSettings.musicVol() / 100f);
+		Sample.INSTANCE.enable(SPDSettings.soundFx());
+		Sample.INSTANCE.volume(SPDSettings.SFXVol() * SPDSettings.SFXVol() / 100f);
+
+		Sample.INSTANCE.load(Assets.Sounds.all);
+
+		// Difficulty.INSTANCE.consumeAnkh( SPDSettings.consumeAnkh() );
+
 	}
 
 	@Override
@@ -97,44 +101,44 @@ public class ShatteredPixelDungeon extends Game {
 		if (!DeviceCompat.isiOS()) {
 			super.finish();
 		} else {
-			//can't exit on iOS (Apple guidelines), so just go to title screen
+			// can't exit on iOS (Apple guidelines), so just go to title screen
 			switchScene(TitleScene.class);
 		}
 	}
 
-	public static void switchNoFade(Class<? extends PixelScene> c){
+	public static void switchNoFade(Class<? extends PixelScene> c) {
 		switchNoFade(c, null);
 	}
 
 	public static void switchNoFade(Class<? extends PixelScene> c, SceneChangeCallback callback) {
 		PixelScene.noFade = true;
-		switchScene( c, callback );
+		switchScene(c, callback);
 	}
-	
+
 	public static void seamlessResetScene(SceneChangeCallback callback) {
-		if (scene() instanceof PixelScene){
+		if (scene() instanceof PixelScene) {
 			((PixelScene) scene()).saveWindows();
-			switchNoFade((Class<? extends PixelScene>) sceneClass, callback );
+			switchNoFade((Class<? extends PixelScene>) sceneClass, callback);
 		} else {
 			resetScene();
 		}
 	}
-	
-	public static void seamlessResetScene(){
+
+	public static void seamlessResetScene() {
 		seamlessResetScene(null);
 	}
-	
+
 	@Override
 	protected void switchScene() {
 		super.switchScene();
-		if (scene instanceof PixelScene){
+		if (scene instanceof PixelScene) {
 			((PixelScene) scene).restoreWindows();
 		}
 	}
-	
+
 	@Override
-	public void resize( int width, int height ) {
-		if (width == 0 || height == 0){
+	public void resize(int width, int height) {
+		if (width == 0 || height == 0) {
 			return;
 		}
 
@@ -144,19 +148,19 @@ public class ShatteredPixelDungeon extends Game {
 			((PixelScene) scene).saveWindows();
 		}
 
-		super.resize( width, height );
+		super.resize(width, height);
 
 		updateDisplaySize();
 
 	}
-	
+
 	@Override
-	public void destroy(){
+	public void destroy() {
 		super.destroy();
 		GameScene.endActorThread();
 	}
-	
-	public void updateDisplaySize(){
+
+	public void updateDisplaySize() {
 		platform.updateDisplaySize();
 	}
 

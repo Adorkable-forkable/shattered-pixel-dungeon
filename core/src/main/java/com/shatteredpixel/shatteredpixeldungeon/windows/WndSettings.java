@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -49,25 +53,22 @@ import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Locale;
-
 public class WndSettings extends WndTabbed {
 
-	private static final int WIDTH_P	    = 122;
-	private static final int WIDTH_L	    = 223;
+	private static final int WIDTH_P = 122;
+	private static final int WIDTH_L = 223;
 
-	private static final int SLIDER_HEIGHT	= 21;
-	private static final int BTN_HEIGHT	    = 16;
-	private static final float GAP          = 1;
+	private static final int SLIDER_HEIGHT = 21;
+	private static final int BTN_HEIGHT = 16;
+	private static final float GAP = 1;
 
-	private DisplayTab  display;
-	private UITab       ui;
-	private InputTab    input;
-	private DataTab     data;
-	private AudioTab    audio;
-	private LangsTab    langs;
+	private DisplayTab display;
+	private UITab ui;
+	private InputTab input;
+	private DataTab data;
+	private AudioTab audio;
+	private LangsTab langs;
+	private DifficultyTab difficulty;
 
 	public static int last_index = 0;
 
@@ -81,28 +82,30 @@ public class WndSettings extends WndTabbed {
 		display = new DisplayTab();
 		display.setSize(width, 0);
 		height = display.height();
-		add( display );
+		add(display);
 
-		add( new IconTab(Icons.get(Icons.DISPLAY)){
+		add(new IconTab(Icons.get(Icons.DISPLAY)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
 				display.visible = display.active = value;
-				if (value) last_index = 0;
+				if (value)
+					last_index = 0;
 			}
 		});
 
 		ui = new UITab();
 		ui.setSize(width, 0);
 		height = Math.max(height, ui.height());
-		add( ui );
+		add(ui);
 
-		add( new IconTab(Icons.get(Icons.PREFS)){
+		add(new IconTab(Icons.get(Icons.PREFS)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
 				ui.visible = ui.active = value;
-				if (value) last_index = 1;
+				if (value)
+					last_index = 1;
 			}
 		});
 
@@ -111,9 +114,9 @@ public class WndSettings extends WndTabbed {
 		height = Math.max(height, input.height());
 
 		if (DeviceCompat.hasHardKeyboard() || ControllerHandler.isControllerConnected()) {
-			add( input );
+			add(input);
 			Image icon;
-			if (ControllerHandler.controllerActive || !DeviceCompat.hasHardKeyboard()){
+			if (ControllerHandler.controllerActive || !DeviceCompat.hasHardKeyboard()) {
 				icon = Icons.get(Icons.CONTROLLER);
 			} else {
 				icon = Icons.get(Icons.KEYBOARD);
@@ -123,7 +126,8 @@ public class WndSettings extends WndTabbed {
 				protected void select(boolean value) {
 					super.select(value);
 					input.visible = input.active = value;
-					if (value) last_index = 2;
+					if (value)
+						last_index = 2;
 				}
 			});
 		}
@@ -131,49 +135,51 @@ public class WndSettings extends WndTabbed {
 		data = new DataTab();
 		data.setSize(width, 0);
 		height = Math.max(height, data.height());
-		add( data );
+		add(data);
 
-		add( new IconTab(Icons.get(Icons.DATA)){
+		add(new IconTab(Icons.get(Icons.DATA)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
 				data.visible = data.active = value;
-				if (value) last_index = 3;
+				if (value)
+					last_index = 3;
 			}
 		});
 
 		audio = new AudioTab();
 		audio.setSize(width, 0);
 		height = Math.max(height, audio.height());
-		add( audio );
+		add(audio);
 
-		add( new IconTab(Icons.get(Icons.AUDIO)){
+		add(new IconTab(Icons.get(Icons.AUDIO)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
 				audio.visible = audio.active = value;
-				if (value) last_index = 4;
+				if (value)
+					last_index = 4;
 			}
 		});
 
 		langs = new LangsTab();
 		langs.setSize(width, 0);
 		height = Math.max(height, langs.height());
-		add( langs );
+		add(langs);
 
-
-		IconTab langsTab = new IconTab(Icons.get(Icons.LANGS)){
+		IconTab langsTab = new IconTab(Icons.get(Icons.LANGS)) {
 			@Override
 			protected void select(boolean value) {
 				super.select(value);
 				langs.visible = langs.active = value;
-				if (value) last_index = 5;
+				if (value)
+					last_index = 5;
 			}
 
 			@Override
 			protected void createChildren() {
 				super.createChildren();
-				switch(Messages.lang().status()){
+				switch (Messages.lang().status()) {
 					case UNFINISHED:
 						icon.hardlight(1.5f, 0, 0);
 						break;
@@ -184,15 +190,32 @@ public class WndSettings extends WndTabbed {
 			}
 
 		};
-		add( langsTab );
+		add(langsTab);
 
-		resize(width, (int)Math.ceil(height));
+		difficulty = new DifficultyTab();
+		difficulty.setSize(width, 0);
+		height = Math.max(height, difficulty.height());
+		add(difficulty);
+
+		IconTab difficultyTab = new IconTab(Icons.get(Icons.GOLD)) {
+			@Override
+			protected void select(boolean value) {
+				super.select(value);
+				difficulty.visible = difficulty.active = value;
+				if (value)
+					last_index = 6;
+			}
+
+		};
+		add(difficultyTab);
+
+		resize(width, (int) Math.ceil(height));
 
 		layoutTabs();
 
-		if (tabs.size() == 5 && last_index >= 3){
-			//input tab isn't visible
-			select(last_index-1);
+		if (tabs.size() == 5 && last_index >= 3) {
+			// input tab isn't visible
+			select(last_index - 1);
 		} else {
 			select(last_index);
 		}
@@ -202,15 +225,17 @@ public class WndSettings extends WndTabbed {
 	@Override
 	public void hide() {
 		super.hide();
-		//resets generators because there's no need to retain chars for languages not selected
+		// resets generators because there's no need to retain chars for languages not
+		// selected
 		ShatteredPixelDungeon.seamlessResetScene(new Game.SceneChangeCallback() {
 			@Override
 			public void beforeCreate() {
 				Game.platform.resetGenerators();
 			}
+
 			@Override
 			public void afterCreate() {
-				//do nothing
+				// do nothing
 			}
 		});
 	}
@@ -238,14 +263,14 @@ public class WndSettings extends WndTabbed {
 			sep1 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep1);
 
-			chkFullscreen = new CheckBox( Messages.get(this, "fullscreen") ) {
+			chkFullscreen = new CheckBox(Messages.get(this, "fullscreen")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
 					SPDSettings.fullscreen(checked());
 				}
 			};
-			if (DeviceCompat.supportsFullScreen()){
+			if (DeviceCompat.supportsFullScreen()) {
 				chkFullscreen.checked(SPDSettings.fullscreen());
 			} else {
 				chkFullscreen.checked(true);
@@ -278,18 +303,17 @@ public class WndSettings extends WndTabbed {
 						}
 					}
 				};
-				chkSaver.checked( SPDSettings.powerSaver() );
-				add( chkSaver );
+				chkSaver.checked(SPDSettings.powerSaver());
+				add(chkSaver);
 			}
 
 			if (DeviceCompat.isAndroid()) {
 				Boolean landscape = SPDSettings.landscape();
-				if (landscape == null){
+				if (landscape == null) {
 					landscape = Game.width > Game.height;
 				}
 				Boolean finalLandscape = landscape;
-				btnOrientation = new RedButton(finalLandscape ?
-						Messages.get(this, "portrait")
+				btnOrientation = new RedButton(finalLandscape ? Messages.get(this, "portrait")
 						: Messages.get(this, "landscape")) {
 					@Override
 					protected void onClick() {
@@ -349,15 +373,15 @@ public class WndSettings extends WndTabbed {
 
 			float bottom = y;
 
-			title.setPos((width - title.width())/2, bottom + GAP);
+			title.setPos((width - title.width()) / 2, bottom + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
 			bottom = sep1.y + 1;
 
 			if (width > 200 && chkSaver != null) {
-				chkFullscreen.setRect(0, bottom + GAP, width/2-1, BTN_HEIGHT);
-				chkSaver.setRect(chkFullscreen.right()+ GAP, bottom + GAP, width/2-1, BTN_HEIGHT);
+				chkFullscreen.setRect(0, bottom + GAP, width / 2 - 1, BTN_HEIGHT);
+				chkSaver.setRect(chkFullscreen.right() + GAP, bottom + GAP, width / 2 - 1, BTN_HEIGHT);
 				bottom = chkFullscreen.bottom();
 			} else {
 				chkFullscreen.setRect(0, bottom + GAP, width, BTN_HEIGHT);
@@ -374,7 +398,7 @@ public class WndSettings extends WndTabbed {
 				bottom = btnOrientation.bottom();
 			}
 
-			if (optScale != null){
+			if (optScale != null) {
 				optScale.setRect(0, bottom + GAP, width, SLIDER_HEIGHT);
 				bottom = optScale.bottom();
 			}
@@ -383,12 +407,14 @@ public class WndSettings extends WndTabbed {
 			sep2.y = bottom + GAP;
 			bottom = sep2.y + 1;
 
-			if (width > 200){
-				optBrightness.setRect(0, bottom + GAP, width/2-GAP/2, SLIDER_HEIGHT);
-				optVisGrid.setRect(optBrightness.right() + GAP, optBrightness.top(), width/2-GAP/2, SLIDER_HEIGHT);
+			if (width > 200) {
+				optBrightness.setRect(0, bottom + GAP, width / 2 - GAP / 2, SLIDER_HEIGHT);
+				optVisGrid.setRect(optBrightness.right() + GAP, optBrightness.top(), width / 2 - GAP / 2,
+						SLIDER_HEIGHT);
 
-				optFollowIntensity.setRect(0, optVisGrid.bottom() + GAP, width/2-GAP/2, SLIDER_HEIGHT);
-				optScreenShake.setRect(optFollowIntensity.right() + GAP, optFollowIntensity.top(), width/2-GAP/2, SLIDER_HEIGHT);
+				optFollowIntensity.setRect(0, optVisGrid.bottom() + GAP, width / 2 - GAP / 2, SLIDER_HEIGHT);
+				optScreenShake.setRect(optFollowIntensity.right() + GAP, optFollowIntensity.top(), width / 2 - GAP / 2,
+						SLIDER_HEIGHT);
 			} else {
 				optBrightness.setRect(0, bottom + GAP, width, SLIDER_HEIGHT);
 				optVisGrid.setRect(0, optBrightness.bottom() + GAP, width, SLIDER_HEIGHT);
@@ -424,17 +450,16 @@ public class WndSettings extends WndTabbed {
 			sep1 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep1);
 
-			//add slider for UI size only if device has enough space to support it
+			// add slider for UI size only if device has enough space to support it
 			float wMin = Game.width / PixelScene.MIN_WIDTH_FULL;
 			float hMin = Game.height / PixelScene.MIN_HEIGHT_FULL;
-			if (Math.min(wMin, hMin) >= 2*Game.density){
+			if (Math.min(wMin, hMin) >= 2 * Game.density) {
 				optUIMode = new OptionSlider(
 						Messages.get(this, "ui_mode"),
 						Messages.get(this, "mobile"),
 						Messages.get(this, "full"),
 						0,
-						2
-				) {
+						2) {
 					@Override
 					protected void onChange() {
 						SPDSettings.interfaceSize(getSelectedValue());
@@ -445,12 +470,12 @@ public class WndSettings extends WndTabbed {
 				add(optUIMode);
 			}
 
-			if ((int)Math.ceil(2* Game.density) < PixelScene.maxDefaultZoom) {
+			if ((int) Math.ceil(2 * Game.density) < PixelScene.maxDefaultZoom) {
 				optUIScale = new OptionSlider(Messages.get(this, "scale"),
-						(int)Math.ceil(2* Game.density)+ "X",
+						(int) Math.ceil(2 * Game.density) + "X",
 						PixelScene.maxDefaultZoom + "X",
-						(int)Math.ceil(2* Game.density),
-						PixelScene.maxDefaultZoom ) {
+						(int) Math.ceil(2 * Game.density),
+						PixelScene.maxDefaultZoom) {
 					@Override
 					protected void onChange() {
 						if (getSelectedValue() != SPDSettings.scale()) {
@@ -464,13 +489,15 @@ public class WndSettings extends WndTabbed {
 			}
 
 			if (SPDSettings.interfaceSize() == 0) {
-				btnToolbarSettings = new RedButton(Messages.get(this, "toolbar_settings"), 9){
+				btnToolbarSettings = new RedButton(Messages.get(this, "toolbar_settings"), 9) {
 					@Override
 					protected void onClick() {
-						ShatteredPixelDungeon.scene().addToFront(new Window(){
+						ShatteredPixelDungeon.scene().addToFront(new Window() {
 
 							RenderedTextBlock barDesc;
-							RedButton btnSplit; RedButton btnGrouped; RedButton btnCentered;
+							RedButton btnSplit;
+							RedButton btnGrouped;
+							RedButton btnCentered;
 							CheckBox chkQuickSwapper;
 							RenderedTextBlock swapperDesc;
 							CheckBox chkFlipToolbar;
@@ -525,7 +552,8 @@ public class WndSettings extends WndTabbed {
 								}
 								add(btnCentered);
 
-								chkQuickSwapper = new CheckBox(Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
+								chkQuickSwapper = new CheckBox(
+										Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
 									@Override
 									protected void onClick() {
 										super.onClick();
@@ -536,7 +564,8 @@ public class WndSettings extends WndTabbed {
 								chkQuickSwapper.checked(SPDSettings.quickSwapper());
 								add(chkQuickSwapper);
 
-								swapperDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
+								swapperDesc = PixelScene
+										.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
 								swapperDesc.hardlight(0x888888);
 								add(swapperDesc);
 
@@ -551,7 +580,7 @@ public class WndSettings extends WndTabbed {
 								chkFlipToolbar.checked(SPDSettings.flipToolbar());
 								add(chkFlipToolbar);
 
-								chkFlipTags = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_indicators")){
+								chkFlipTags = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_indicators")) {
 									@Override
 									protected void onClick() {
 										super.onClick();
@@ -562,31 +591,32 @@ public class WndSettings extends WndTabbed {
 								chkFlipTags.checked(SPDSettings.flipTags());
 								add(chkFlipTags);
 
-								//layout
+								// layout
 								resize(WIDTH_P, 0);
 
 								barDesc.setPos((width - barDesc.width()) / 2f, GAP);
 								PixelScene.align(barDesc);
 
 								int btnWidth = (int) (width - 2 * GAP) / 3;
-								btnSplit.setRect(0, barDesc.bottom() + GAP, btnWidth, BTN_HEIGHT-2);
-								btnGrouped.setRect(btnSplit.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT-2);
-								btnCentered.setRect(btnGrouped.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT-2);
+								btnSplit.setRect(0, barDesc.bottom() + GAP, btnWidth, BTN_HEIGHT - 2);
+								btnGrouped.setRect(btnSplit.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT - 2);
+								btnCentered.setRect(btnGrouped.right() + GAP, btnSplit.top(), btnWidth, BTN_HEIGHT - 2);
 
 								chkQuickSwapper.setRect(0, btnGrouped.bottom() + GAP, width, BTN_HEIGHT);
 
 								swapperDesc.maxWidth(width);
-								swapperDesc.setPos(0, chkQuickSwapper.bottom()+1);
+								swapperDesc.setPos(0, chkQuickSwapper.bottom() + 1);
 
 								if (width > 200) {
 									chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width / 2 - 1, BTN_HEIGHT);
-									chkFlipTags.setRect(chkFlipToolbar.right() + GAP, chkFlipToolbar.top(), width / 2 - 1, BTN_HEIGHT);
+									chkFlipTags.setRect(chkFlipToolbar.right() + GAP, chkFlipToolbar.top(),
+											width / 2 - 1, BTN_HEIGHT);
 								} else {
 									chkFlipToolbar.setRect(0, swapperDesc.bottom() + GAP, width, BTN_HEIGHT);
 									chkFlipTags.setRect(0, chkFlipToolbar.bottom() + GAP, width, BTN_HEIGHT);
 								}
 
-								resize(WIDTH_P, (int)chkFlipTags.bottom());
+								resize(WIDTH_P, (int) chkFlipTags.bottom());
 
 							}
 						});
@@ -612,7 +642,7 @@ public class WndSettings extends WndTabbed {
 			sep2 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep2);
 
-			chkFont = new CheckBox(Messages.get(this, "system_font")){
+			chkFont = new CheckBox(Messages.get(this, "system_font")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
@@ -624,7 +654,7 @@ public class WndSettings extends WndTabbed {
 
 						@Override
 						public void afterCreate() {
-							//do nothing
+							// do nothing
 						}
 					});
 				}
@@ -632,12 +662,12 @@ public class WndSettings extends WndTabbed {
 			chkFont.checked(SPDSettings.systemFont());
 			add(chkFont);
 
-			chkVibrate = new CheckBox(Messages.get(this, "vibration")){
+			chkVibrate = new CheckBox(Messages.get(this, "vibration")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
 					SPDSettings.vibration(checked());
-					if (checked()){
+					if (checked()) {
 						Game.vibrate(250);
 					}
 				}
@@ -651,15 +681,15 @@ public class WndSettings extends WndTabbed {
 
 		@Override
 		protected void layout() {
-			title.setPos((width - title.width())/2, y + GAP);
+			title.setPos((width - title.width()) / 2, y + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
 			height = sep1.y + 1;
 
-			if (optUIMode != null && optUIScale != null && width > 200){
-				optUIMode.setRect(0, height + GAP, width/2-1, SLIDER_HEIGHT);
-				optUIScale.setRect(width/2+1, height + GAP, width/2-1, SLIDER_HEIGHT);
+			if (optUIMode != null && optUIScale != null && width > 200) {
+				optUIMode.setRect(0, height + GAP, width / 2 - 1, SLIDER_HEIGHT);
+				optUIScale.setRect(width / 2 + 1, height + GAP, width / 2 - 1, SLIDER_HEIGHT);
 				height = optUIScale.bottom();
 			} else {
 				if (optUIMode != null) {
@@ -685,8 +715,8 @@ public class WndSettings extends WndTabbed {
 			sep2.y = height + GAP;
 
 			if (width > 200) {
-				chkFont.setRect(0, sep2.y + 1 + GAP, width/2-1, BTN_HEIGHT);
-				chkVibrate.setRect(chkFont.right()+2, chkFont.top(), width/2-1, BTN_HEIGHT);
+				chkFont.setRect(0, sep2.y + 1 + GAP, width / 2 - 1, BTN_HEIGHT);
+				chkVibrate.setRect(chkFont.right() + 2, chkFont.top(), width / 2 - 1, BTN_HEIGHT);
 				height = chkVibrate.bottom();
 
 			} else {
@@ -698,7 +728,7 @@ public class WndSettings extends WndTabbed {
 
 	}
 
-	private static class InputTab extends Component{
+	private static class InputTab extends Component {
 
 		RenderedTextBlock title;
 		ColorBlock sep1;
@@ -720,9 +750,9 @@ public class WndSettings extends WndTabbed {
 			sep1 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep1);
 
-			if (DeviceCompat.hasHardKeyboard()){
+			if (DeviceCompat.hasHardKeyboard()) {
 
-				btnKeyBindings = new RedButton(Messages.get(this, "key_bindings")){
+				btnKeyBindings = new RedButton(Messages.get(this, "key_bindings")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -733,8 +763,8 @@ public class WndSettings extends WndTabbed {
 				add(btnKeyBindings);
 			}
 
-			if (ControllerHandler.isControllerConnected()){
-				btnControllerBindings = new RedButton(Messages.get(this, "controller_bindings")){
+			if (ControllerHandler.isControllerConnected()) {
+				btnControllerBindings = new RedButton(Messages.get(this, "controller_bindings")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -748,14 +778,12 @@ public class WndSettings extends WndTabbed {
 			sep2 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep2);
 
-
 			optControlSens = new OptionSlider(
 					Messages.get(this, "controller_sensitivity"),
 					"1",
 					"10",
 					1,
-					10
-			) {
+					10) {
 				@Override
 				protected void onChange() {
 					SPDSettings.controllerPointerSensitivity(getSelectedValue());
@@ -769,8 +797,7 @@ public class WndSettings extends WndTabbed {
 					Messages.get(this, "off"),
 					Messages.get(this, "high"),
 					0,
-					4
-			) {
+					4) {
 				@Override
 				protected void onChange() {
 					SPDSettings.movementHoldSensitivity(getSelectedValue());
@@ -782,15 +809,15 @@ public class WndSettings extends WndTabbed {
 
 		@Override
 		protected void layout() {
-			title.setPos((width - title.width())/2, y + GAP);
+			title.setPos((width - title.width()) / 2, y + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
-			height = sep1.y+1;
+			height = sep1.y + 1;
 
-			if (width > 200 && btnKeyBindings != null && btnControllerBindings != null){
-				btnKeyBindings.setRect(0, height + GAP, width/2-1, BTN_HEIGHT);
-				btnControllerBindings.setRect(width/2+1, height + GAP, width/2-1, BTN_HEIGHT);
+			if (width > 200 && btnKeyBindings != null && btnControllerBindings != null) {
+				btnKeyBindings.setRect(0, height + GAP, width / 2 - 1, BTN_HEIGHT);
+				btnControllerBindings.setRect(width / 2 + 1, height + GAP, width / 2 - 1, BTN_HEIGHT);
 				height = btnControllerBindings.bottom();
 			} else {
 				if (btnKeyBindings != null) {
@@ -805,11 +832,11 @@ public class WndSettings extends WndTabbed {
 			}
 
 			sep2.size(width, 1);
-			sep2.y = height+ GAP;
+			sep2.y = height + GAP;
 
-			if (width > 200){
-				optControlSens.setRect(0, sep2.y + 1 + GAP, width/2-1, SLIDER_HEIGHT);
-				optHoldMoveSens.setRect(width/2 + 1, optControlSens.top(), width/2 -1, SLIDER_HEIGHT);
+			if (width > 200) {
+				optControlSens.setRect(0, sep2.y + 1 + GAP, width / 2 - 1, SLIDER_HEIGHT);
+				optHoldMoveSens.setRect(width / 2 + 1, optControlSens.top(), width / 2 - 1, SLIDER_HEIGHT);
 			} else {
 				optControlSens.setRect(0, sep2.y + 1 + GAP, width, SLIDER_HEIGHT);
 				optHoldMoveSens.setRect(0, optControlSens.bottom() + GAP, width, SLIDER_HEIGHT);
@@ -820,7 +847,7 @@ public class WndSettings extends WndTabbed {
 		}
 	}
 
-	private static class DataTab extends Component{
+	private static class DataTab extends Component {
 
 		RenderedTextBlock title;
 		ColorBlock sep1;
@@ -838,7 +865,7 @@ public class WndSettings extends WndTabbed {
 			sep1 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep1);
 
-			chkNews = new CheckBox(Messages.get(this, "news")){
+			chkNews = new CheckBox(Messages.get(this, "news")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
@@ -861,7 +888,7 @@ public class WndSettings extends WndTabbed {
 				chkUpdates.checked(SPDSettings.updates());
 				add(chkUpdates);
 
-				if (Updates.supportsBetaChannel()){
+				if (Updates.supportsBetaChannel()) {
 					chkBetas = new CheckBox(Messages.get(this, "betas")) {
 						@Override
 						protected void onClick() {
@@ -875,8 +902,8 @@ public class WndSettings extends WndTabbed {
 				}
 			}
 
-			if (!DeviceCompat.isDesktop()){
-				chkWifi = new CheckBox(Messages.get(this, "wifi")){
+			if (!DeviceCompat.isDesktop()) {
+				chkWifi = new CheckBox(Messages.get(this, "wifi")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -890,14 +917,14 @@ public class WndSettings extends WndTabbed {
 
 		@Override
 		protected void layout() {
-			title.setPos((width - title.width())/2, y + GAP);
+			title.setPos((width - title.width()) / 2, y + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
 			float pos;
-			if (width > 200 && chkUpdates != null){
-				chkNews.setRect(0, sep1.y + 1 + GAP, width/2-1, BTN_HEIGHT);
-				chkUpdates.setRect(chkNews.right() + GAP, chkNews.top(), width/2-1, BTN_HEIGHT);
+			if (width > 200 && chkUpdates != null) {
+				chkNews.setRect(0, sep1.y + 1 + GAP, width / 2 - 1, BTN_HEIGHT);
+				chkUpdates.setRect(chkNews.right() + GAP, chkNews.top(), width / 2 - 1, BTN_HEIGHT);
 				pos = chkUpdates.bottom();
 			} else {
 				chkNews.setRect(0, sep1.y + 1 + GAP, width, BTN_HEIGHT);
@@ -908,12 +935,12 @@ public class WndSettings extends WndTabbed {
 				}
 			}
 
-			if (chkBetas != null){
+			if (chkBetas != null) {
 				chkBetas.setRect(0, pos + GAP, width, BTN_HEIGHT);
 				pos = chkBetas.bottom();
 			}
 
-			if (chkWifi != null){
+			if (chkWifi != null) {
 				chkWifi.setRect(0, pos + GAP, width, BTN_HEIGHT);
 				pos = chkWifi.bottom();
 			}
@@ -954,7 +981,7 @@ public class WndSettings extends WndTabbed {
 			optMusic.setSelectedValue(SPDSettings.musicVol());
 			add(optMusic);
 
-			chkMusicMute = new CheckBox(Messages.get(this, "music_mute")){
+			chkMusicMute = new CheckBox(Messages.get(this, "music_mute")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
@@ -971,7 +998,7 @@ public class WndSettings extends WndTabbed {
 				@Override
 				protected void onChange() {
 					SPDSettings.SFXVol(getSelectedValue());
-					if (Random.Int(100) == 0){
+					if (Random.Int(100) == 0) {
 						Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 					} else {
 						Sample.INSTANCE.play(Random.oneOf(Assets.Sounds.GOLD,
@@ -986,23 +1013,23 @@ public class WndSettings extends WndTabbed {
 			optSFX.setSelectedValue(SPDSettings.SFXVol());
 			add(optSFX);
 
-			chkMuteSFX = new CheckBox( Messages.get(this, "sfx_mute") ) {
+			chkMuteSFX = new CheckBox(Messages.get(this, "sfx_mute")) {
 				@Override
 				protected void onClick() {
 					super.onClick();
 					SPDSettings.soundFx(!checked());
-					Sample.INSTANCE.play( Assets.Sounds.CLICK );
+					Sample.INSTANCE.play(Assets.Sounds.CLICK);
 				}
 			};
 			chkMuteSFX.checked(!SPDSettings.soundFx());
-			add( chkMuteSFX );
+			add(chkMuteSFX);
 
-			if (DeviceCompat.isiOS()){
+			if (DeviceCompat.isiOS()) {
 
 				sep3 = new ColorBlock(1, 1, 0xFF000000);
 				add(sep3);
 
-				chkIgnoreSilent = new CheckBox( Messages.get(this, "ignore_silent") ){
+				chkIgnoreSilent = new CheckBox(Messages.get(this, "ignore_silent")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -1012,12 +1039,12 @@ public class WndSettings extends WndTabbed {
 				chkIgnoreSilent.checked(SPDSettings.ignoreSilentMode());
 				add(chkIgnoreSilent);
 
-			} else if (DeviceCompat.isDesktop()){
+			} else if (DeviceCompat.isDesktop()) {
 
 				sep3 = new ColorBlock(1, 1, 0xFF000000);
 				add(sep3);
 
-				chkMusicBG = new CheckBox( Messages.get(this, "music_bg") ){
+				chkMusicBG = new CheckBox(Messages.get(this, "music_bg")) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -1031,19 +1058,19 @@ public class WndSettings extends WndTabbed {
 
 		@Override
 		protected void layout() {
-			title.setPos((width - title.width())/2, y + GAP);
+			title.setPos((width - title.width()) / 2, y + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
 			if (width > 200) {
-				optMusic.setRect(0, sep1.y + 1 + GAP, width/2-1, SLIDER_HEIGHT);
-				chkMusicMute.setRect(0, optMusic.bottom() + GAP, width/2-1, BTN_HEIGHT);
+				optMusic.setRect(0, sep1.y + 1 + GAP, width / 2 - 1, SLIDER_HEIGHT);
+				chkMusicMute.setRect(0, optMusic.bottom() + GAP, width / 2 - 1, BTN_HEIGHT);
 
 				sep2.size(width, 1);
-				sep2.y = sep1.y; //just have them overlap
+				sep2.y = sep1.y; // just have them overlap
 
-				optSFX.setRect(optMusic.right()+2, sep2.y + 1 + GAP, width/2-1, SLIDER_HEIGHT);
-				chkMuteSFX.setRect(chkMusicMute.right()+2, optSFX.bottom() + GAP, width/2-1, BTN_HEIGHT);
+				optSFX.setRect(optMusic.right() + 2, sep2.y + 1 + GAP, width / 2 - 1, SLIDER_HEIGHT);
+				chkMuteSFX.setRect(chkMusicMute.right() + 2, optSFX.bottom() + GAP, width / 2 - 1, BTN_HEIGHT);
 
 			} else {
 				optMusic.setRect(0, sep1.y + 1 + GAP, width, SLIDER_HEIGHT);
@@ -1058,13 +1085,13 @@ public class WndSettings extends WndTabbed {
 
 			height = chkMuteSFX.bottom();
 
-			if (chkIgnoreSilent != null){
+			if (chkIgnoreSilent != null) {
 				sep3.size(width, 1);
 				sep3.y = chkMuteSFX.bottom() + GAP;
 
 				chkIgnoreSilent.setRect(0, sep3.y + 1 + GAP, width, BTN_HEIGHT);
 				height = chkIgnoreSilent.bottom();
-			} else if (chkMusicBG != null){
+			} else if (chkMusicBG != null) {
 				sep3.size(width, 1);
 				sep3.y = chkMuteSFX.bottom() + GAP;
 
@@ -1075,7 +1102,7 @@ public class WndSettings extends WndTabbed {
 
 	}
 
-	private static class LangsTab extends Component{
+	private static class LangsTab extends Component {
 
 		final static int COLS_P = 3;
 		final static int COLS_L = 6;
@@ -1104,30 +1131,36 @@ public class WndSettings extends WndTabbed {
 
 			Languages nativeLang = Languages.matchLocale(Locale.getDefault());
 			langs.remove(nativeLang);
-			//move the native language to the top.
+			// move the native language to the top.
 			langs.add(0, nativeLang);
 
 			final Languages currLang = Messages.lang();
 
 			txtLangInfo = PixelScene.renderTextBlock(6);
 			String info = "_" + Messages.titleCase(currLang.nativeName()) + "_ - ";
-			if (currLang == Languages.ENGLISH) info += "This is the source language, written by the developer.";
-			else if (currLang.status() == Languages.Status._COMPLETE_) info += Messages.get(this, "completed");
-			else if (currLang.status() == Languages.Status.UNREVIEWED) info += Messages.get(this, "unreviewed");
-			else if (currLang.status() == Languages.Status.UNFINISHED) info += Messages.get(this, "unfinished");
+			if (currLang == Languages.ENGLISH)
+				info += "This is the source language, written by the developer.";
+			else if (currLang.status() == Languages.Status._COMPLETE_)
+				info += Messages.get(this, "completed");
+			else if (currLang.status() == Languages.Status.UNREVIEWED)
+				info += Messages.get(this, "unreviewed");
+			else if (currLang.status() == Languages.Status.UNFINISHED)
+				info += Messages.get(this, "unfinished");
 			txtLangInfo.text(info);
 
-			if (currLang.status() == Languages.Status.UNREVIEWED) txtLangInfo.setHightlighting(true, CharSprite.WARNING);
-			else if (currLang.status() == Languages.Status.UNFINISHED) txtLangInfo.setHightlighting(true, CharSprite.NEGATIVE);
+			if (currLang.status() == Languages.Status.UNREVIEWED)
+				txtLangInfo.setHightlighting(true, CharSprite.WARNING);
+			else if (currLang.status() == Languages.Status.UNFINISHED)
+				txtLangInfo.setHightlighting(true, CharSprite.NEGATIVE);
 			add(txtLangInfo);
 
 			sep2 = new ColorBlock(1, 1, 0xFF000000);
 			add(sep2);
 
 			lanBtns = new RedButton[langs.size()];
-			for (int i = 0; i < langs.size(); i++){
+			for (int i = 0; i < langs.size(); i++) {
 				final int langIndex = i;
-				RedButton btn = new RedButton(Messages.titleCase(langs.get(i).nativeName()), 6){
+				RedButton btn = new RedButton(Messages.titleCase(langs.get(i).nativeName()), 6) {
 					@Override
 					protected void onClick() {
 						super.onClick();
@@ -1139,14 +1172,15 @@ public class WndSettings extends WndTabbed {
 								GameLog.wipe();
 								Game.platform.resetGenerators();
 							}
+
 							@Override
 							public void afterCreate() {
-								//do nothing
+								// do nothing
 							}
 						});
 					}
 				};
-				if (currLang == langs.get(i)){
+				if (currLang == langs.get(i)) {
 					btn.textColor(TITLE_COLOR);
 				} else {
 					switch (langs.get(i).status()) {
@@ -1178,57 +1212,62 @@ public class WndSettings extends WndTabbed {
 						String[] reviewers = currLang.reviewers();
 						String[] translators = currLang.translators();
 
-						int totalCredits = 2*reviewers.length + translators.length;
-						int totalTokens = 2*totalCredits; //for spaces
+						int totalCredits = 2 * reviewers.length + translators.length;
+						int totalTokens = 2 * totalCredits; // for spaces
 
-						//additional space for titles, and newline chars
-						if (reviewers.length > 0) totalTokens+=6;
-						totalTokens +=4;
+						// additional space for titles, and newline chars
+						if (reviewers.length > 0)
+							totalTokens += 6;
+						totalTokens += 4;
 
 						String[] entries = new String[totalTokens];
 						int index = 0;
-						if (reviewers.length > 0){
+						if (reviewers.length > 0) {
 							entries[0] = "_";
 							entries[1] = Messages.titleCase(Messages.get(LangsTab.this, "reviewers"));
 							entries[2] = "_";
 							entries[3] = "\n";
 							index = 4;
-							for (int i = 0; i < reviewers.length; i++){
+							for (int i = 0; i < reviewers.length; i++) {
 								entries[index] = reviewers[i];
-								if (i < reviewers.length-1) entries[index] += ", ";
-								entries[index+1] = " ";
+								if (i < reviewers.length - 1)
+									entries[index] += ", ";
+								entries[index + 1] = " ";
 								index += 2;
 							}
 							entries[index] = "\n";
-							entries[index+1] = "\n";
+							entries[index + 1] = "\n";
 							index += 2;
 						}
 
 						entries[index] = "_";
-						entries[index+1] = Messages.titleCase(Messages.get(LangsTab.this, "translators"));
-						entries[index+2] = "_";
-						entries[index+3] = "\n";
+						entries[index + 1] = Messages.titleCase(Messages.get(LangsTab.this, "translators"));
+						entries[index + 2] = "_";
+						entries[index + 3] = "\n";
 						index += 4;
 
-						//reviewers are also shown as translators
-						for (int i = 0; i < reviewers.length; i++){
+						// reviewers are also shown as translators
+						for (int i = 0; i < reviewers.length; i++) {
 							entries[index] = reviewers[i];
-							if (i < reviewers.length-1 || translators.length > 0) entries[index] += ", ";
-							entries[index+1] = " ";
+							if (i < reviewers.length - 1 || translators.length > 0)
+								entries[index] += ", ";
+							entries[index + 1] = " ";
 							index += 2;
 						}
 
-						for (int i = 0; i < translators.length; i++){
+						for (int i = 0; i < translators.length; i++) {
 							entries[index] = translators[i];
-							if (i < translators.length-1) entries[index] += ", ";
-							entries[index+1] = " ";
+							if (i < translators.length - 1)
+								entries[index] += ", ";
+							entries[index + 1] = " ";
 							index += 2;
 						}
 
 						Window credits = new Window(0, 0, Chrome.get(Chrome.Type.TOAST));
 
 						int w = PixelScene.landscape() ? 120 : 80;
-						if (totalCredits >= 25) w *= 1.5f;
+						if (totalCredits >= 25)
+							w *= 1.5f;
 
 						RenderedTextBlock title = PixelScene.renderTextBlock(9);
 						title.text(Messages.titleCase(Messages.get(LangsTab.this, "credits")), w);
@@ -1254,14 +1293,14 @@ public class WndSettings extends WndTabbed {
 
 		@Override
 		protected void layout() {
-			title.setPos((width - title.width())/2, y + GAP);
+			title.setPos((width - title.width()) / 2, y + GAP);
 			sep1.size(width, 1);
-			sep1.y = title.bottom() + 3*GAP;
+			sep1.y = title.bottom() + 3 * GAP;
 
 			txtLangInfo.setPos(0, sep1.y + 1 + GAP);
-			txtLangInfo.maxWidth((int)width);
+			txtLangInfo.maxWidth((int) width);
 
-			y = txtLangInfo.bottom() + 2*GAP;
+			y = txtLangInfo.bottom() + 2 * GAP;
 			int x = 0;
 
 			sep2.size(width, 1);
@@ -1269,39 +1308,105 @@ public class WndSettings extends WndTabbed {
 			y += 2;
 
 			int cols = PixelScene.landscape() ? COLS_L : COLS_P;
-			int btnWidth = (int)Math.floor((width - (cols-1)) / cols);
-			for (RedButton btn : lanBtns){
+			int btnWidth = (int) Math.floor((width - (cols - 1)) / cols);
+			for (RedButton btn : lanBtns) {
 				btn.setRect(x, y, btnWidth, BTN_HEIGHT);
 				btn.setPos(x, y);
-				x += btnWidth+1;
-				if (x + btnWidth > width){
+				x += btnWidth + 1;
+				if (x + btnWidth > width) {
 					x = 0;
-					y += BTN_HEIGHT+1;
+					y += BTN_HEIGHT + 1;
 				}
 			}
-			if (x > 0){
-				y += BTN_HEIGHT+1;
+			if (x > 0) {
+				y += BTN_HEIGHT + 1;
 			}
 
 			sep3.size(width, 1);
 			sep3.y = y;
 			y += 2;
 
-			if (btnCredits != null){
+			if (btnCredits != null) {
 				btnCredits.setSize(btnCredits.reqWidth() + 2, 16);
 				btnCredits.setPos(width - btnCredits.width(), y);
 
 				txtTranifex.setPos(0, y);
-				txtTranifex.maxWidth((int)btnCredits.left());
+				txtTranifex.maxWidth((int) btnCredits.left());
 
 				height = Math.max(btnCredits.bottom(), txtTranifex.bottom());
 			} else {
 				txtTranifex.setPos(0, y);
-				txtTranifex.maxWidth((int)width);
+				txtTranifex.maxWidth((int) width);
 
 				height = txtTranifex.bottom();
 			}
 
 		}
+	}
+
+	private static class DifficultyTab extends Component {
+
+		RenderedTextBlock title;
+		ColorBlock sep1;
+		CheckBox consumeAnkh;
+		CheckBox hunger;
+
+		@Override
+		protected void createChildren() {
+			title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
+			title.hardlight(TITLE_COLOR);
+			add(title);
+
+			sep1 = new ColorBlock(1, 1, 0xFF000000);
+			add(sep1);
+
+			consumeAnkh = new CheckBox(Messages.get(this, "consume_ankh")) {
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.consumeAnkh(!checked());
+				}
+			};
+			consumeAnkh.checked(!SPDSettings.consumeAnkh());
+			add(consumeAnkh);
+
+			hunger = new CheckBox(Messages.get(this, "hunger")) {
+				@Override
+				protected void onClick() {
+					super.onClick();
+					SPDSettings.hunger(!checked());
+				}
+			};
+			hunger.checked(!SPDSettings.hunger());
+			add(hunger);
+		}
+
+		@Override
+		protected void layout() {
+			title.setPos((width - title.width()) / 2, y + GAP);
+			sep1.size(width, 1);
+			sep1.y = title.bottom() + 3 * GAP;
+
+			if (width > 200) {
+				consumeAnkh.setRect(0, sep1.y + 1 + GAP, width / 2 - 1, BTN_HEIGHT);
+			} else {
+				consumeAnkh.setRect(0, sep1.y + 1 + GAP, width, BTN_HEIGHT);
+			}
+
+			if (width > 200) {
+				hunger.setRect(0, consumeAnkh.bottom() + 1 + GAP, width / 2 - 1, BTN_HEIGHT);
+			} else {
+				hunger.setRect(0, consumeAnkh.bottom() + 1 + GAP, width, BTN_HEIGHT);
+			}
+
+			// if (chkMusicBG != null) {
+			// sep3.size(width, 1);
+			// sep3.y = chkMuteSFX.bottom() + GAP;
+
+			// chkMusicBG.setRect(0, sep3.y + 1 + GAP, width, BTN_HEIGHT);
+			// height = chkMusicBG.bottom();
+			// }
+		}
+
 	}
 }
